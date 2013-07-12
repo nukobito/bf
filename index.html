@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>Brain F*ck</title>
+    <script src="brainfuck.js"></script>
+    <script>
+        (function ( window ) {
+            window.onload = function () {
+                var buttonRun = window.document.getElementById( 'buttonRun' );
+                buttonRun.onclick = function () {
+                    var textarea = window.document.getElementById( 'source' );
+                    
+                    var scaner = new Scaner( textarea.value );
+                    var vm = new VirtualMachine( scaner );
+                    vm.oninput = function () {
+                        return window.prompt( 'input', '' );
+                    };
+                    vm.onresult = function ( outputStream ) {
+                        var s = '';
+                        for ( var key in this.outputStream ) {
+                            s += String.fromCharCode( this.outputStream[ key ] );
+                        }
+                        var result = window.document.getElementById( 'result' );
+                        result.innerHTML = s;
+                    };
+                    vm.run();
+                };
+            };
+        }( window ));
+    </script>
+</head>
+<body>
+    <form name="form" id="form">
+        <textarea id="source" name="source" cols="30" rows="10"></textarea><br>
+        <input id="buttonRun" type="button" value="実行"><br>
+        <span id='result'></span>
+    </form>
+    <p id="result"></p>
+</body>
+</html>
